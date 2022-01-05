@@ -1,0 +1,11 @@
+# Python files
+*__pycache__*
+*.pyc
+*.egg-info
+
+# Figures
+*.png
+*.pdf
+
+# Visual Studio Code
+.vscode/*
