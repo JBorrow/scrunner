@@ -6,3 +6,4 @@ sources.
 
 from scrunner.runner import ScriptRunner
 from scrunner.arguments import ScriptArgumentParser
+from scrunner.html import WebpageCreator

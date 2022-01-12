@@ -2,9 +2,14 @@
 Basic objects describing scripts.
 """
 
-from typing import List, Union
+from typing import Any, List, Union
 import attr
 from pathlib import Path
+from distutils.util import strtobool
+
+
+def anytobool(x: Any) -> bool:
+    return bool(strtobool(str(x).lower()))
 
 
 @attr.s(auto_attribs=True)
@@ -12,19 +17,19 @@ class Output:
     filename: str
     title: str
     description: str
-    multi_output: bool
+    multi_output: bool = attr.ib(converter=anytobool)
 
-    def get_paths(self, file_ext: str, number_of_outputs: int) -> list[Path]:
+    def get_paths(self, file_type: str, number_of_figures: int) -> list[Path]:
         """
         Gets the possible (relative) file paths for this script.
 
         Parameters
         ----------
 
-        file_ext: str
+        file_type: str
             The file extension of the outputs.
 
-        number_of_outputs: int
+        number_of_figures: int
             The total number of outputs that will be used in the
             generation of this figure. If ``multi_output`` is true,
             the outputs will be numbered.
@@ -45,28 +50,27 @@ class Output:
 
         .. code::python
 
-           Output.get_paths(file_ext="png", number_of_outputs=3)
+           Output.get_paths(file_type="png", number_of_outputs=3)
            >>> ["test_0.png", "test_1.png", "test_2.png"]
 
         If ``multi_output`` is ``false``, then:
 
         .. code::python
 
-           Output.get_paths(file_ext="png", number_of_outputs=3)
+           Output.get_paths(file_type="png", number_of_outputs=3)
            >>> ["test.png"]
         """
 
-        if self.multi_output:
-            return [Path(f"{self.filename}.{file_ext}")]
+        if not self.multi_output:
+            return [Path(f"{self.filename}.{file_type}")]
         else:
             return [
-                Path(
-                    f"{self.filename}_{n}.{file_ext}" for n in range(number_of_outputs)
-                )
+                Path(f"{self.filename}_{n}.{file_type}")
+                for n in range(number_of_figures)
             ]
 
     def get_metadata(
-        self, file_ext: str, number_of_outputs: int
+        self, file_type: str, number_of_figures: int
     ) -> dict[str, Union[str, Path]]:
         """
         Gets expanded, and flattened, metadata as a dictionary.
@@ -74,10 +78,10 @@ class Output:
         Parameters
         ----------
 
-        file_ext: str
+        file_type: str
             The file extension of the outputs.
 
-        number_of_outputs: int
+        number_of_figures: int
             The total number of outputs that will be used in the
             generation of this figure. If ``multi_output`` is true,
             the outputs will be numbered.
@@ -92,7 +96,7 @@ class Output:
 
         metadata = dict(
             filenames=self.get_paths(
-                file_ext=file_ext, number_of_outputs=number_of_outputs
+                file_type=file_type, number_of_figures=number_of_figures
             ),
             title=self.title,
             description=self.description,
@@ -111,8 +115,8 @@ class Script:
 
     def get_metadata(
         self,
-        file_ext: str,
-        number_of_outputs: int,
+        file_type: str,
+        number_of_figures: int,
     ) -> list[dict[str, Union[str, Path]]]:
         """
         Gets expanded, and flattened, metadata, for each of the individual
@@ -121,10 +125,10 @@ class Script:
         Parameters
         ----------
 
-        file_ext: str
+        file_type: str
             The file extension of the outputs.
 
-        number_of_outputs: int
+        number_of_figures: int
             The total number of outputs that will be used in the
             generation of this figure. If ``multi_output`` is true,
             the outputs will be numbered.
@@ -138,6 +142,8 @@ class Script:
         """
 
         return [
-            output.get_metadata(file_ext=file_ext, number_of_outputs=number_of_outputs)
+            output.get_metadata(
+                file_type=file_type, number_of_figures=number_of_figures
+            )
             for output in self.outputs
         ]

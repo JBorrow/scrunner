@@ -4,7 +4,7 @@ they conform to the correct API.
 """
 
 import argparse as ap
-from typing import List, Optional, Dict, Any
+from typing import Optional
 from pathlib import Path
 import attr
 
@@ -102,3 +102,36 @@ class ScriptArgumentParser:
         self.file_type = args.file_type
         self.number_of_figures = args.number_of_figures
         self.stylesheet = args.stylesheet
+
+    def get_filename_for_output(
+        self, base_name: str, output_number: Optional[int] = None
+    ) -> Path:
+        """
+        Gets the filename, including output path, for a given
+        output number.
+
+        Parameters
+        ----------
+
+        base_name: str
+            The base name of the file, for instance ``plot_example``.
+            This will be converted to ``output_path/plot_example_0.file_type``
+
+        output_number: Optional[int]
+            The output number that this file corresponds to. If this is
+            not a multi-output figure, do not supply this argument.
+
+        Returns
+        -------
+
+        Path
+            The ``pathlib`` object at which the figure should be
+            saved at.
+        """
+
+        if output_number is None:
+            return (
+                self.output_directory / f"{base_name}_{output_number}.{self.file_type}"
+            )
+        else:
+            return self.output_directory / f"{base_name}.{self.file_type}"

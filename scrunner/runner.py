@@ -3,7 +3,7 @@ Script runner main object.
 """
 
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 from subprocess import CalledProcessError, run
 from time import perf_counter
@@ -15,7 +15,7 @@ import sys
 from scrunner.scripts import Script, Output
 
 
-@attr.s
+@attr.s(auto_attribs=False)
 class ScriptRunner:
     """
     Parses and runs scripts in a given directory.
@@ -100,6 +100,41 @@ class ScriptRunner:
 
         return scripts, script_paths
 
+    def get_metadata(
+        self, file_type: str, number_of_figures: int
+    ) -> list[dict[str, Union[str, Path]]]:
+        """
+        Gets expanded, and flattened, metadata as a list of
+        dictionaries for each script.
+
+        Parameters
+        ----------
+
+        file_type: str
+            The file extension of the outputs.
+
+        number_of_figures: int
+            The total number of outputs that will be used in the
+            generation of these figures. If ``multi_output`` is true,
+            the outputs will be numbered.
+
+
+        Returns
+        -------
+
+        metadata: list[dict[str, Union[str, Path]]]
+            A metadata dictionary for the output files that this will produce.
+        """
+        metadata = []
+
+        for script in self.scripts:
+            metadata = metadata + script.get_metadata(
+                file_type=file_type,
+                number_of_figures=number_of_figures,
+            )
+
+        return metadata
+
     def run(
         self,
         data: list[Path],
@@ -150,15 +185,20 @@ class ScriptRunner:
 
         failures = []
         warnings = []
+        n_failures = 0
+        n_warnings = 0
 
         for script, script_path in zip(self.scripts, self.script_paths):
             start = perf_counter()
+
+            to_run = [
+                str(interpreter),
+                str(script_path),
+                *arguments,
+            ]
+
             complete = run(
-                [
-                    interpreter,
-                    script_path,
-                    *arguments,
-                ],
+                to_run,
                 capture_output=True,
                 encoding="utf-8",
                 check=False,
@@ -176,24 +216,30 @@ class ScriptRunner:
 
             try:
                 complete.check_returncode()
+                if "Warn" in complete.stdout or "Warn" in complete.stderr:
+                    warnings.append(
+                        f"{script_path}\n{output_text}{error_text}\n"
+                        f"Run just this script with {' '.join(to_run)}."
+                    )
+                    n_warnings += 1
             except CalledProcessError:
+                n_failures += 1
+                failures.append(
+                    f"{script_path}\n{output_text}{error_text}\n"
+                    f"Run just this script with {' '.join(to_run)}."
+                )
 
-                failures.append(f"{script_path}\n{output_text}{error_text}")
-
-            if "Warn" in complete.stdout or "Warn" in complete.stderr:
-                failures.append(f"{script_path}\n{output_text}{error_text}")
-
-        if len(warnings) > 0:
+        if n_warnings > 0:
             print("Warnings:")
             print("\n".join(warnings))
 
-        if len(failures) > 0:
+        if n_failures > 0:
             print("Failures:")
             print("\n".join(failures))
 
-        print(f"Successfully completed {len(self.scripts) - len(failures)} scripts")
-        print(f"There were {len(failures)} failures")
-        print(f"There were {len(warnings)} scripts that raised warnings")
+        print(f"Successfully completed {len(self.scripts) - n_failures} scripts")
+        print(f"There were {n_failures} failures")
+        print(f"There were {n_warnings} scripts that raised warnings")
 
-        if len(failures) + len(warnings) > 0:
+        if n_warnings + n_failures > 0:
             print("Error and warning information are available in stdout above.")
