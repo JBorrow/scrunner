@@ -1,0 +1,327 @@
+{% raw %}
+
+/* Style file for the `plot_viewer` template. */
+
+
+/* Text */
+* {
+    font-family: 'Times New Roman', Times, serif;
+}
+
+html, body {
+    padding: 0.0;
+    margin: 0.0;
+}
+
+body {
+    font-size: 10pt;
+}
+
+h1 {
+    margin-top: 0.0;
+}
+
+/* Navigation */
+
+#navigation {
+    background-color: #DDDDDD;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.nav {
+    list-style-type: none;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav li {
+    display: inline-block;
+    margin: 0.25em;
+    margin-right: 0;
+    padding: 0;
+}
+
+.nav li a {
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    color: black;
+    background-color: #EEE;
+    margin: 0;
+    font-size: 9pt;
+    border: 1px solid grey;
+    border-radius: 2px;
+    box-shadow: 1px 1px 5px #BBBBBB;
+}
+
+.nav li a:hover {
+    background-color: white;
+}
+
+/* Sections and plots */
+
+.section {
+    padding: 1em;
+    margin: 0;
+}
+
+.plot-container {
+    padding: 0;
+    margin: 0.0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.plot {
+    width: 25em;
+
+    padding: 1em;
+    margin-bottom: 1em;
+    margin-right: 1em;
+
+    border: 1px solid grey;
+    border-radius: 2px;
+    box-shadow: 1px 1px 5px #BBBBBB;
+}
+
+.plot img {
+    width: 100%;
+}
+
+.plot p {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.plot h3 {
+    margin-top: 0.5em;
+    margin-bottom: 0.0em;
+}
+
+/* Runs */
+
+.run {
+    width: 25em;
+
+    padding: 1em;
+    margin-bottom: 1em;
+    margin-right: 1em;
+
+    border: 1px solid grey;
+    border-radius: 2px;
+    box-shadow: 1px 1px 5px #BBBBBB;
+    background-color: #EEE;
+}
+
+.run h3, h4 {
+    margin-top: 0.0;
+    margin-bottom: 1em;
+}
+
+.run ul {
+    margin-left: 0.0;
+    margin-top: 0.0;
+}
+
+.run p {
+    margin-top: 0.0;
+}
+
+.run table {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+/* Tables - only inside borders */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+table th {
+    border: 1px solid grey;
+    border-top: 0;
+}
+
+
+table tr th:first-child {
+    border-left: 0;
+}
+
+table tr th:last-child {
+    border-right: 0;
+}
+
+table td {
+    border-right: 1px solid grey;
+}
+
+table tr td:last-child {
+    border-right: 0;
+}
+
+/* Footer */
+
+#footer {
+    background-color: #DDDDDD;
+    margin: 0;
+    padding: 0;
+    bottom: 0;
+}
+
+#footer p {
+    padding: 0.5em;
+    margin: 0;
+}
+
+/* Lightbox - for zooming in on figures. */
+/* Shamelessly borrowed from https://codepen.io/ongtiffany/pen/BoOeQV */
+
+/* Styles the lightbox, removes it from sight and adds the fade-in transition */
+
+.lightbox-target {
+    position: fixed;
+    top: -100%;
+    width: 100%;
+    background: rgba(0,0,0,.7);
+    width: 100%;
+    opacity: 0;
+    -webkit-transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -o-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+    color: white;
+    text-align: center;
+}
+
+/* Styles the lightbox image, centers it vertically and horizontally,
+   adds the zoom-in transition and makes it responsive using a combination
+   of margin and absolute positioning */
+
+.lightbox-target img {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left:0;
+    right:0;
+    bottom: 0;
+    max-height: 0%;
+    max-width: 0%;
+    border: 2px solid black;
+    padding: 0.5em;
+    box-shadow: 0px 0px 8px rgba(0,0,0,.3);
+    box-sizing: border-box;
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+    background-color: white;
+}
+
+/* Styles the close link, adds the slide down transition */
+
+a.lightbox-close {
+    display: block;
+    width:50px;
+    height:50px;
+    box-sizing: border-box;
+    background: white;
+    color: black;
+    text-decoration: none;
+    position: absolute;
+    top: -80px;
+    right: 0;
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+}
+
+/* Provides part of the "X" to eliminate an image from the close link */
+
+a.lightbox-close:before {
+    content: "";
+    display: block;
+    height: 30px;
+    width: 1px;
+    background: black;
+    position: absolute;
+    left: 26px;
+    top:10px;
+    -webkit-transform:rotate(45deg);
+    -moz-transform:rotate(45deg);
+    -o-transform:rotate(45deg);
+    transform:rotate(45deg);
+}
+
+/* Provides part of the "X" to eliminate an image from the close link */
+
+a.lightbox-close:after {
+    content: "";
+    display: block;
+    height: 30px;
+    width: 1px;
+    background: black;
+    position: absolute;
+    left: 26px;
+    top:10px;
+    -webkit-transform:rotate(-45deg);
+    -moz-transform:rotate(-45deg);
+    -o-transform:rotate(-45deg);
+    transform:rotate(-45deg);
+}
+
+/* Uses the :target pseudo-class to perform the animations upon clicking
+   the .lightbox-target anchor */
+
+.lightbox-target:target {
+    opacity: 1;
+    top: 0;
+    bottom: 0;
+    z-index: 1024;
+}
+
+.lightbox-target:target img {
+    max-height: 75%;
+    max-width: 90%;
+    z-index: 1024;
+}
+
+.lightbox-target:target a.lightbox-close {
+    top: 0px;
+    z-index: 1024;
+}
+
+.lightbox-target-wide:target img {
+    max-height: 95%;
+    max-width: 95%;
+    z-index: 1024;
+}
+
+/* Image specific styles */
+
+.thumbnails {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+.thumbnail {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+.border {
+    border: 1px solid black;
+}
+    
+{% endraw %}

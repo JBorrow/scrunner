@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_name }}{% endblock %}
+
+{% block navigation %}
+{# Purely internal navigation links to take you up/down the page #}
+<ul class="nav">
+    {% for section in sections.values() | sort(attribute="title") %}
+    <li><a href="#{{ section.id }}">{{ section.title }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
+{% block content %}
+{# Show off our figures! #}
+{% for section in sections.values() | sort(attribute="title") %}
+<div class="section" id="{{ section.id }}">
+    <h1>{{ section.title }}</h1>
+    <p>{{ section.description }}</p>
+    <div class="plot-container">
+        {% for filename, hash in section.filenames.items() %}
+        <div class="plot">
+            <a class="lightbox" href="#{{ hash }}">
+                <img src="{{ filename }}" />
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+{# Create lightbox targets. #}
+{% for section in sections.values() | sort(attribute="title") %}
+{% for filename, hash in section.filenames.items() %}
+<div class="lightbox-target" id="{{ hash }}">
+    <img src="{{ filename }}" />
+    <h3>{{ section.title }}</h3>
+    <p>{{ section.description }}</p>
+    <a class="lightbox-close" href="#{{ section.id }}"></a>
+</div>
+{% endfor %}
+{% endfor %}
+{% endblock %}
+
+{% block footer %}
+<p>
+    Created with version {{ pipeline_version }} of the pipeline
+    with version {{ velociraptor_version }} of the velociraptor
+    python library on {{ creation_date }}.
+</p>
+{% endblock %}
