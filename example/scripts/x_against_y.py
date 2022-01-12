@@ -36,4 +36,4 @@ for n, data in enumerate(loaded_data):
     ax.set_xlabel("$x$")
     ax.set_ylabel("$y$")
 
-    fig.savefig(arguments.output_directory / f"x_against_y_{n}.{arguments.file_type}")
+    fig.savefig(arguments.get_filename_for_output("x_against_y", n))
