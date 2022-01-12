@@ -31,8 +31,8 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "-f",
-        "--script-directory",
+        "-p",
+        "--python-scripts",
         help="Directory containing the python scripts to use.",
         type=Path,
         required=True,
@@ -74,14 +74,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     data = args.data
-    script_directory = args.script_directory
+    python_scripts = args.script_directory
     output_directory = args.output_directory
     file_type = args.file_type
     number_of_figures = args.number_of_figures
     stylesheet = args.stylesheet
 
     runner = ScriptRunner(
-        path=script_directory,
+        path=python_scripts,
     )
 
     webpage = WebpageCreator()

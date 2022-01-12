@@ -165,7 +165,7 @@ tool `scrun`:
 ```
 scrun \
   -d data_file_one.csv data_file_two.csv \
-  -r /home/josh/scripts_to_run \
+  -p /home/josh/scripts_to_run \
   -o ./my_outputs/output_7 \
   -f png \
   -n 3 \
