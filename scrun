@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""
+The main runner for ScRunner.
+"""
+
+from scrunner import WebpageCreator, ScriptRunner
+
+from pathlib import Path
+
+import argparse as ap
+from pathlib import Path
+
+from scrunner.scripts import Script
+
+if __name__ == "__main__":
+    parser = ap.ArgumentParser(
+        description=(
+            "Main script runner for ScRunner. This runs all python "
+            + "scripts in a given folder (given by -f or --script-directory "
+            + "by passing them the appropriate arguments."
+        )
+    )
+
+    parser.add_argument(
+        "-d",
+        "--data",
+        help="Data input files. Example: test_0.hdf5 test_1.hdf5",
+        type=Path,
+        required=True,
+        nargs="*",
+    )
+
+    parser.add_argument(
+        "-f",
+        "--script-directory",
+        help="Directory containing the python scripts to use.",
+        type=Path,
+        required=True,
+    )
+
+    parser.add_argument(
+        "-o",
+        "--output-directory",
+        help="Output directory for the produced figures.",
+        type=Path,
+        required=True,
+    )
+
+    parser.add_argument(
+        "-f",
+        "--file-type",
+        help="File type (extension) for the output files",
+        type=str,
+        required=True,
+    )
+
+    parser.add_argument(
+        "-n",
+        "--number-of-figures",
+        help="Number of figures to create with each script.",
+        type=int,
+        required=True,
+    )
+
+    parser.add_argument(
+        "-s",
+        "--stylesheet",
+        help="Matplotlib stylesheet to use",
+        type=str,
+        required=False,
+        default="default",
+    )
+
+    args = parser.parse_args()
+
+    data = args.data
+    script_directory = args.script_directory
+    output_directory = args.output_directory
+    file_type = args.file_type
+    number_of_figures = args.number_of_figures
+    stylesheet = args.stylesheet
+
+    runner = ScriptRunner(
+        path=script_directory,
+    )
+
+    webpage = WebpageCreator()
+
+    output_directory.mkdir(exist_ok=True)
+
+    runner.run(
+        data=data,
+        output_directory=output_directory,
+        file_type=file_type,
+        number_of_figures=number_of_figures,
+        stylesheet=stylesheet,
+    )
+
+    webpage.add_metadata(page_name="ScRunner Output")
+
+    webpage.add_plots(
+        data=runner.get_metadata(
+            file_type=file_type,
+            number_of_figures=number_of_figures,
+        )
+    )
