@@ -79,7 +79,12 @@ class ScriptRunner:
                     else:
                         continue
 
-            parsed_frontmatter = json.loads("".join(frontmatter))
+            try:
+                parsed_frontmatter = json.loads("".join(frontmatter))
+            except json.decoder.JSONDecodeError:
+                raise RuntimeError(
+                    f"Unable to parse JSON frontmatter in {script_filename}."
+                )
 
             parsed_script = Script(
                 name=parsed_frontmatter["name"],

@@ -71,7 +71,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     data = args.data
-    python_scripts = args.script_directory
+    python_scripts = args.python_scripts
     output_directory = args.output_directory
     file_type = args.file_type
     number_of_figures = args.number_of_figures
