@@ -2,10 +2,11 @@
 Basic objects describing scripts.
 """
 
-from typing import Any, List, Union
-import attr
-from pathlib import Path
 from distutils.util import strtobool
+from pathlib import Path
+from typing import Any, List, Union
+
+import attr
 
 
 def anytobool(x: Any) -> bool:

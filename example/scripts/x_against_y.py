@@ -18,10 +18,10 @@ Script that plots x against y.
 ---
 """
 
-from scrunner import ScriptArgumentParser
-
 import matplotlib.pyplot as plt
 import numpy as np
+
+from scrunner import ScriptArgumentParser
 
 arguments = ScriptArgumentParser()
 plt.style.use(arguments.stylesheet)

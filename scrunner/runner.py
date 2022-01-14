@@ -2,17 +2,16 @@
 Script runner main object.
 """
 
-from pathlib import Path
-from typing import Optional, Union
-
-from subprocess import CalledProcessError, run
-from time import perf_counter
-
-import attr
 import json
 import sys
+from pathlib import Path
+from subprocess import CalledProcessError, run
+from time import perf_counter
+from typing import Optional, Union
 
-from scrunner.scripts import Script, Output
+import attr
+
+from scrunner.scripts import Output, Script
 
 
 @attr.s(auto_attribs=False)

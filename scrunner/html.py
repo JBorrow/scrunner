@@ -2,13 +2,14 @@
 Functions that aid in the production of the HTML webpages.
 """
 
-from typing import Optional, Union
-from jinja2 import Environment, PackageLoader, select_autoescape
-from time import strftime
 from pathlib import Path
-from scrunner import __version__
+from time import strftime
+from typing import Optional, Union
 
 import unyt
+from jinja2 import Environment, PackageLoader, select_autoescape
+
+from scrunner import __version__
 
 
 def format_number(number):

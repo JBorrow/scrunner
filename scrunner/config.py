@@ -3,6 +3,7 @@ Global config containing things like the stylesheet.
 """
 
 from pathlib import Path
+
 import attr
 
 

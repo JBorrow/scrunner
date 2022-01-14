@@ -4,8 +4,9 @@ they conform to the correct API.
 """
 
 import argparse as ap
-from typing import Optional
 from pathlib import Path
+from typing import Optional
+
 import attr
 
 
