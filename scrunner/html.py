@@ -2,10 +2,11 @@
 Functions that aid in the production of the HTML webpages.
 """
 
-from typing import Union
+from typing import Optional, Union
 from jinja2 import Environment, PackageLoader, select_autoescape
 from time import strftime
 from pathlib import Path
+from scrunner import __version__
 
 import unyt
 
@@ -100,6 +101,7 @@ class WebpageCreator(object):
         # Initialise empty variables dictionary, with the versions of
         # this package and the velociraptor package used.
         self.variables = dict(
+            scrunner_version=__version__,
             creation_date=strftime(r"%Y-%m-%d"),
             sections={},
             runs=[],
@@ -128,7 +130,7 @@ class WebpageCreator(object):
 
         return self.html
 
-    def add_metadata(self, page_name: str):
+    def add_metadata(self, page_name: str, additional_text: Optional[str] = None):
         """
         Add additional metadata to the page.
         Parameters
@@ -137,15 +139,33 @@ class WebpageCreator(object):
             Name to put in the page title.
         """
 
+        if additional_text is not None:
+            self.variables.update(
+                dict(additional_text=additional_text),
+            )
+
         self.variables.update(dict(page_name=page_name))
 
-    def add_plots(self, data: list[dict[str, Union[str, Path]]]):
+    def add_plots(
+        self,
+        data: list[dict[str, Union[str, Path]]],
+        output_directory: Optional[Path] = None,
+    ):
         """
         Adds the auto plotter metadata to the section / plot metadata.
+
         Parameters
         ----------
-        plot_container: PlotContainer
-            Complete plot container, post-run.
+
+        data: list[dict[str, Union[str, Path]]]
+            Result of ``runner.get_metadata()``.
+
+        output_directory: Path, optional
+            Output directory that contains the figures. If this
+            is provided, only created figures will be displayed
+            on the webpage. If not, then the page will contain
+            blank spaces where failed plots should live (can be
+            useful for debugging).
         """
 
         self.data = data
@@ -153,20 +173,24 @@ class WebpageCreator(object):
         output = {}
 
         for plot in data:
-            hash_and_filenames = {
-                x: f"plot{abs(hash(str(x)))}" for x in plot["filenames"]
-            }
+            if output_directory is not None:
+                valid_filenames = [
+                    x for x in plot["filenames"] if (output_directory / x).exists()
+                ]
+            else:
+                valid_filenames = plot["filenames"]
 
-            temp_output = plot.copy()
-            temp_output["filenames"] = hash_and_filenames
+            if len(valid_filenames) > 0:
+                hash_and_filenames = {
+                    x: f"plot{abs(hash(str(x)))}" for x in valid_filenames
+                }
 
-            temp_output["id"] = f"sec{abs(hash(plot['title']))}"
+                temp_output = plot.copy()
+                temp_output["filenames"] = hash_and_filenames
 
-            output[plot["title"]] = temp_output
+                temp_output["id"] = f"sec{abs(hash(plot['title']))}"
 
-        # import pdb
-
-        # pdb.set_trace()
+                output[plot["title"]] = temp_output
 
         self.variables["sections"] = output
 
