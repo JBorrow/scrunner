@@ -129,7 +129,7 @@ class ScriptArgumentParser:
             saved at.
         """
 
-        if output_number is None:
+        if output_number is not None:
             return (
                 self.output_directory / f"{base_name}_{output_number}.{self.file_type}"
             )
