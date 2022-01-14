@@ -104,5 +104,8 @@ if __name__ == "__main__":
         data=runner.get_metadata(
             file_type=file_type,
             number_of_figures=number_of_figures,
-        )
+        ),
+        output_directory=output_directory,
     )
+
+    webpage.save_html(filename=output_directory / "index.html")
