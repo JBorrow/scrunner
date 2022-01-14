@@ -39,20 +39,31 @@ Basic script description
 "name": "test_script.py",
 "created_by": "Josh Borrow",
 "contact_email": "borrowj@mit.edu",
+"capture_stdout": "True",
 "outputs": [
-        {
-            "filename": "stellar_density_image",
-            "title": "Stellar Halo Image",
-            "description": "Projected stellar density through entire selected volume (as a 2D histogram). Haloes with $M_* > 10^6$ M$_\\odot$ are shown as points.",
-            "multi_output": "False"
-        },
-        {
-            "filename": "stellar_density_image_individual",
-            "title": "Stellar Halo Image",
-            "description": "Projected stellar density for individual objects",
-            "multi_output": "True"
-        }
-    ]
+    {
+        "filename": "stellar_density_image",
+        "title": "Stellar Halo Image",
+        "description": "Projected stellar density through entire selected volume (as a 2D histogram). Haloes with $M_* > 10^6$ M$_\\odot$ are shown as points.",
+        "multi_output": "False"
+    },
+    {
+        "filename": "stellar_density_image_individual",
+        "title": "Stellar Halo Image",
+        "description": "Projected stellar density for individual objects",
+        "multi_output": "True"
+    }
+],
+"ancillary_outputs": [
+    {
+        "filename": "parameters.txt",
+        "title": "Runtime Parameters"
+    },
+    {
+        "filename": "config.txt",
+        "title": "Compile-time Parameters"
+    }
+]
 }
 ---
 ```
@@ -60,11 +71,14 @@ Basic script description
 The frontmatter should be valid JSON (i.e. it must not have
 trailing commas).
 
-This script should then produce two sets of figures. The first,
+This script should then produce two sets of figures (listed in "outputs"),
+and two additional outputs ("parameters.txt" and "config.txt"). The first,
 a single figure, called `stellar_density_image.png` (or other given
 file extension, decided at runtime), and a series of figures called
 `stellar_density_image_individual_0.png` up to a number determined
-at run time.
+at run time. If "capture_stdout" is `True`, then the standard output
+of this script will be captured and displayed at the top of the webpage.
+It is suggested that the script prints valid HTML.
 
 Within the script, the `ScriptArgumentParser` must be used, as
 follows:
@@ -153,6 +167,9 @@ arguments.get_filename_for_output(
 
 Not providing the `output_number` argument provides the
 file path for a non-multi-output figure.
+
+Ancillary outputs should make use of the `arguments.output_directory`
+to save to the correct location.
 
 
 Running Scripts
