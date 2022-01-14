@@ -111,6 +111,7 @@ class Script:
     name: Path
     created_by: str
     contact_email: str
+    capture_stdout: bool = attr.ib(converter=anytobool)
     outputs: list[Output]
 
     def get_metadata(

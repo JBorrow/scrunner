@@ -96,7 +96,9 @@ if __name__ == "__main__":
         stylesheet=stylesheet,
     )
 
-    webpage.add_metadata(page_name="ScRunner Output")
+    webpage.add_metadata(
+        page_name="ScRunner Output", additional_text=runner.captured_stdout
+    )
 
     webpage.add_plots(
         data=runner.get_metadata(

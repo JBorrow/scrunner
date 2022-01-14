@@ -12,6 +12,17 @@
 {% endblock %}
 
 {% block content %}
+{# Describe the runs that are included #}
+{% if additional_text %}
+<div class="section run-descriptions">
+    <div class="plot-container">
+        <div class="run">
+            {{ additional_text }}
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {# Show off our figures! #}
 {% for section in sections.values() | sort(attribute="title") %}
 <div class="section" id="{{ section.id }}">
@@ -44,8 +55,7 @@
 
 {% block footer %}
 <p>
-    Created with version {{ pipeline_version }} of the pipeline
-    with version {{ velociraptor_version }} of the velociraptor
+    Created with version {{ scrunner_version }} of the scrunner
     python library on {{ creation_date }}.
 </p>
 {% endblock %}

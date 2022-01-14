@@ -34,6 +34,7 @@ class ScriptRunner:
     path = attr.ib(type=Path, converter=Path)
     scripts: list[Script]
     script_paths: list[Path]
+    captured_stdout: str
 
     def __attrs_post_init__(self):
         """
@@ -41,6 +42,7 @@ class ScriptRunner:
         """
 
         self.scripts, self.script_paths = self.parse_scripts()
+        self.captured_stdout = ""
 
     def parse_scripts(self) -> list[Script]:
         """
@@ -84,6 +86,7 @@ class ScriptRunner:
                 name=parsed_frontmatter["name"],
                 created_by=parsed_frontmatter.get("created_by", "Unknown"),
                 contact_email=parsed_frontmatter.get("contact_email", "Unknown"),
+                capture_stdout=parsed_frontmatter.get("capture_stdout", False),
                 outputs=[
                     Output(
                         filename=output["filename"],
@@ -91,7 +94,7 @@ class ScriptRunner:
                         description=output["description"],
                         multi_output=output["multi_output"],
                     )
-                    for output in parsed_frontmatter["outputs"]
+                    for output in parsed_frontmatter.get("outputs", [])
                 ],
             )
 
@@ -222,6 +225,9 @@ class ScriptRunner:
                         f"Run just this script with {' '.join(to_run)}."
                     )
                     n_warnings += 1
+
+                if script.capture_stdout:
+                    self.captured_stdout += complete.stdout
             except CalledProcessError:
                 n_failures += 1
                 failures.append(

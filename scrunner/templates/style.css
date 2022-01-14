@@ -62,6 +62,32 @@ h1 {
     background-color: white;
 }
 
+/* Buttons in header */
+button {
+    display: inline-block;
+    margin: 0.25em;
+    margin-right: 0;
+    padding: 0;
+    border: 0;
+}
+
+button a {
+    text-decoration: none;
+    display: block;
+    padding: 0.5em;
+    color: black;
+    background-color: #EEE;
+    margin: 0;
+    font-size: 9pt;
+    border: 1px solid grey;
+    border-radius: 2px;
+    box-shadow: 1px 1px 5px #BBBBBB;
+}
+
+button a:hover {
+    background-color: white;
+}
+
 /* Sections and plots */
 
 .section {
