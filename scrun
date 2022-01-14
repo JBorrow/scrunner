@@ -3,13 +3,10 @@
 The main runner for ScRunner.
 """
 
-from scrunner import WebpageCreator, ScriptRunner
-
-from pathlib import Path
-
 import argparse as ap
 from pathlib import Path
 
+from scrunner import ScriptRunner, WebpageCreator
 from scrunner.scripts import Script
 
 if __name__ == "__main__":
