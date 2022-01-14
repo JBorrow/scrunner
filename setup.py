@@ -3,9 +3,13 @@ import setuptools
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+with open("scrunner/version.py", "r") as fh:
+    version = exec(fh.read())
+
+
 setuptools.setup(
     name="scrunner",
-    version="0.0.0",
+    version=version,
     author="Josh Borrow",
     author_email="josh@joshborrow.com",
     description="Runs scripts with associated metadata and puts together a summary page.",
