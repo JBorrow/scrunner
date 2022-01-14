@@ -9,5 +9,5 @@ black scrun
 isort example
 black example
 
-isort scrunner
+isort scrunner --skip __init__.py
 black scrunner

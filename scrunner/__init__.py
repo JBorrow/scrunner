@@ -5,6 +5,7 @@ sources.
 """
 
 from scrunner.version import __version__
+
 from scrunner.arguments import ScriptArgumentParser
 from scrunner.html import WebpageCreator
 from scrunner.runner import ScriptRunner
